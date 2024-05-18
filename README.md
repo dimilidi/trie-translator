@@ -15,6 +15,9 @@ The Prefix Tree Translator is a Python program that implements a prefix tree (tr
 2. Click the "Translate" button to initiate the translation process.
 3. View the translation results, including the translated words, their weights, paths in the prefix tree, and the target languages.
 4. Click the "Go Back" button to return to the input form and translate another word.
+<br><br>
+
+<img src="assets/translator-table.jpg" width="900px">
 
 ## Requirements
 - Python 3.x
