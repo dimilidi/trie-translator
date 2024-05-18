@@ -25,7 +25,7 @@ The Prefix Tree Translator is a Python program that implements a prefix tree (tr
 - googletrans library
 
 ## Installation
-1. Clone the repository: `git clone https://github.com/your_username/prefix-tree-translator.git`
+1. Clone the repository: `git clone https://github.com/dimilidi/prefix-tree-translator.git`
 2. Install the required dependencies: `pip install -r requirements.txt`
 3. Run the Flask application: `python trie.py`
 4. Access the web interface in your browser at `http://localhost:5000`
