@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Results</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #goBackButton {
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        #goBackButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Word</th>
+                <th>Weight</th>
+                <th>Path</th>
+                <th>Language</th>
+            </tr>
+        </thead>
+        <tbody id="translationResults">
+            <!-- Results will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <button id="goBackButton">Go Back</button>
+
+    <script>
+        // Function to parse query parameters from URL
+        function parseQueryParams(queryString) {
+            const params = {};
+            const pairs = queryString.slice(1).split('&');
+            for (const pair of pairs) {
+                const [key, value] = pair.split('=');
+                params[decodeURIComponent(key)] = decodeURIComponent(value);
+            }
+            return params;
+        }
+
+        // Extract query parameters from URL
+        const queryParams = parseQueryParams(window.location.search);
+
+        // Extract similar_words from query parameters
+        const similar_words = JSON.parse(decodeURIComponent(queryParams.similar_words));
+
+        // Render translation results
+        const translationResultsTbody = document.getElementById('translationResults');
+        let wordMap = {};
+
+        for (const weight in similar_words) {
+            if (similar_words.hasOwnProperty(weight)) {
+                const langs = similar_words[weight];
+                for (const lang in langs) {
+                    if (langs.hasOwnProperty(lang)) {
+                        langs[lang].forEach(word => {
+                            if (!wordMap[word]) {
+                                wordMap[word] = { weight: weight, paths: [] };
+                            }
+                            wordMap[word].paths.push(lang);
+                        });
+                    }
+                }
+            }
+        }
+
+        for (const word in wordMap) {
+            if (wordMap.hasOwnProperty(word)) {
+                const { weight, paths } = wordMap[word];
+                const pathString = constructPath(word);
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${word}</td><td>${weight}</td><td>${pathString}</td><td>${paths.join(', ')}</td>`;
+                translationResultsTbody.appendChild(row);
+            }
+        }
+
+        // Function to construct the path from the prefix tree
+        function constructPath(word) {
+            let current = word;
+            let path = [];
+            while (current !== '') {
+                path.unshift(current);
+                current = current.slice(0, -1);
+            }
+            return path.join(' -> ');
+        }
+
+         // Add event listener to the "go back" button
+         document.getElementById('goBackButton').addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>
+
+

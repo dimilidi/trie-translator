@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prefix Tree Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin: 20px auto;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #output {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prefix Tree Translator</h1>
+    <form id="inputForm">
+        <label for="word">Enter a word in English:</label><br>
+        <input type="text" id="word" name="word"><br>
+        <input type="submit" value="Translate">
+    </form>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById("inputForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const word = document.getElementById("word").value;
+
+            // Make a request to the Flask server
+            fetch('/translate?word=' + encodeURIComponent(word))
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Redirect to result.html with the word as a parameter
+                    window.location.href = "/result?similar_words=" + encodeURIComponent(JSON.stringify(data.similar_words));
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
